@@ -1,0 +1,343 @@
+<script>
+	// Update time and date
+	function updateDateTime() {
+		const now = new Date();
+		const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		const dateStr = now.toLocaleDateString('en-US', { 
+			weekday: 'long', 
+			year: 'numeric', 
+			month: 'long', 
+			day: 'numeric' 
+		});
+		
+		document.getElementById('currentTime').textContent = timeStr;
+		document.getElementById('currentDate').textContent = dateStr;
+	}
+	
+	// COMPLETE LOGOUT FUNCTION
+	function logoutUser() {
+		// Show confirmation dialog
+		if (confirm("Are you sure you want to logout?")) {
+			// Show loading state on all logout buttons
+			const logoutButtons = document.querySelectorAll('[onclick*="logoutUser"]');
+			logoutButtons.forEach(btn => {
+				const originalText = btn.innerHTML;
+				btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Logging out...';
+				btn.disabled = true;
+			});
+			
+			// Clear all user session data
+			setTimeout(() => {
+				// Clear ALL user session data
+				localStorage.removeItem('current_user');
+				localStorage.removeItem('isLoggedIn');
+				localStorage.removeItem('isAnonymous');
+				localStorage.removeItem('anonymousId');
+				localStorage.removeItem('userEmail');
+				localStorage.removeItem('todayMood');
+				localStorage.removeItem('currentMood');
+				localStorage.removeItem('lastLogin');
+				
+				// Optional: Clear all localStorage (uncomment if needed)
+				// localStorage.clear();
+				
+				// Show success message using toast
+				showToast('Successfully logged out. Redirecting to registration page...', 'success');
+				
+				// Redirect to registration page after delay
+				setTimeout(() => {
+					window.location.href = 'index.html';
+				}, 1500);
+			}, 1000);
+		}
+	}
+	
+	// Toast notification function
+	function showToast(message, type = 'info') {
+		// Remove any existing toasts
+		document.querySelectorAll('.toast').forEach(toast => toast.remove());
+		
+		const toastHtml = `
+			<div class="toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} border-0 position-fixed bottom-0 end-0 m-3" 
+				 role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+				<div class="d-flex">
+					<div class="toast-body">
+						<i class="bi ${type === 'success' ? 'bi-check-circle' : type === 'error' ? 'bi-exclamation-triangle' : type === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle'} me-2"></i>
+						${message}
+					</div>
+					<button type="button" class="btn-close btn-close-white me-2 mt-2" data-bs-dismiss="toast"></button>
+				</div>
+			</div>
+		`;
+		
+		document.body.insertAdjacentHTML('beforeend', toastHtml);
+		const toastEl = document.querySelector('.toast:last-child');
+		const toast = new bootstrap.Toast(toastEl);
+		toast.show();
+		
+		toastEl.addEventListener('hidden.bs.toast', function() {
+			this.remove();
+		});
+	}
+	
+	// Mood tracking
+	let selectedMood = null;
+	
+	function trackMood(mood, emoji) {
+		// Remove selected class from all buttons
+		document.querySelectorAll('.mood-btn').forEach(btn => {
+			btn.classList.remove('selected');
+			btn.classList.add('btn-outline-primary', 'btn-outline-info', 'btn-outline-warning', 
+							'btn-outline-secondary', 'btn-outline-danger');
+		});
+		
+		// Add selected class to clicked button
+		event.target.classList.add('selected');
+		selectedMood = mood;
+		
+		const intensity = document.getElementById('moodIntensity').value;
+		const note = document.getElementById('moodNote').value;
+		
+		// Save to localStorage
+		const moodData = {
+			mood,
+			emoji,
+			intensity,
+			note,
+			timestamp: new Date().toISOString()
+		};
+		
+		localStorage.setItem('todayMood', JSON.stringify(moodData));
+		localStorage.setItem('currentMood', emoji + ' ' + mood.charAt(0).toUpperCase() + mood.slice(1));
+		
+		const messages = {
+			happy: "That's wonderful! Keep spreading that positive energy! 🌟",
+			calm: "Peace and tranquility - that's a great state to be in. 🧘",
+			anxious: "It's okay to feel anxious. Remember to breathe deeply. 💨",
+			tired: "Listen to your body and take care of yourself. Rest when needed. 💤",
+			stressed: "Stress is natural. Let's work on some calming techniques together. 🌿"
+		};
+		
+		const messageDiv = document.getElementById('moodMessage');
+		messageDiv.textContent = messages[mood];
+		messageDiv.className = `alert alert-${getMoodAlertClass(mood)}`;
+		messageDiv.style.display = 'block';
+		
+		// Show confirmation
+		setTimeout(() => {
+			messageDiv.innerHTML += '<div class="mt-2"><small>Mood logged successfully!</small></div>';
+		}, 1000);
+	}
+	
+	function getMoodAlertClass(mood) {
+		switch(mood) {
+			case 'happy': return 'success';
+			case 'calm': return 'info';
+			case 'anxious': return 'warning';
+			case 'tired': return 'secondary';
+			case 'stressed': return 'danger';
+			default: return 'primary';
+		}
+	}
+	
+	// Daily tips
+	const dailyTips = [
+		"Take 5 minutes to practice gratitude. Write down 3 things you're thankful for today.",
+		"Stay hydrated! Drinking water can improve mood and cognitive function.",
+		"Go for a 10-minute walk outside. Fresh air and movement work wonders.",
+		"Practice mindfulness while eating. Focus on the taste, texture, and aroma of your food.",
+		"Connect with a friend or loved one today. Social connections boost mental health."
+	];
+	
+	// Chat functionality for dashboard
+	function sendDashboardMessage() {
+		const input = document.getElementById('dashboardMessage');
+		const message = input.value.trim();
+		
+		if (message) {
+			addDashboardMessage(message, 'user');
+			input.value = '';
+			
+			// Simulate AI response
+			setTimeout(() => {
+				const responses = [
+					"I'm here to listen. Tell me more.",
+					"Thank you for sharing. How can I support you?",
+					"I understand. Would you like to explore this further in a full chat session?"
+				];
+				const response = responses[Math.floor(Math.random() * responses.length)];
+				addDashboardMessage(response, 'ai');
+			}, 1000);
+		}
+	}
+	
+	function quickDashboardMessage(text) {
+		document.getElementById('dashboardMessage').value = text;
+		sendDashboardMessage();
+	}
+	
+	function addDashboardMessage(text, type) {
+		const chatDiv = document.getElementById('dashboardChat');
+		const messageDiv = document.createElement('div');
+		
+		messageDiv.className = `alert ${type === 'user' ? 'alert-primary' : 'alert-light'} border mb-2`;
+		messageDiv.innerHTML = `
+			<small class="text-muted">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+			<p class="mb-0">${text}</p>
+		`;
+		
+		chatDiv.appendChild(messageDiv);
+		chatDiv.scrollTop = chatDiv.scrollHeight;
+	}
+	
+	// Breathing exercise
+	let breathingInterval;
+	let cycle = 0;
+	
+	function showBreathingExercise() {
+		const modal = new bootstrap.Modal(document.getElementById('breathingModal'));
+		modal.show();
+	}
+	
+	function startBreathing() {
+		let step = 0;
+		const circle = document.getElementById('breathingCircle');
+		const text = document.getElementById('breathingText');
+		const progress = document.getElementById('breathingProgress');
+		const cycleElement = document.getElementById('cycleCount');
+		
+		breathingInterval = setInterval(() => {
+			step++;
+			
+			if (step <= 4) {
+				// Breathe in
+				text.textContent = 'Breathe In';
+				circle.style.transform = `scale(${1 + step * 0.1})`;
+				circle.style.backgroundColor = '#a8edea';
+			} else if (step <= 11) {
+				// Hold
+				text.textContent = 'Hold';
+				circle.style.backgroundColor = '#fed6e3';
+			} else if (step <= 19) {
+				// Breathe out
+				text.textContent = 'Breathe Out';
+				circle.style.transform = `scale(${1 + (19 - step) * 0.1})`;
+				circle.style.backgroundColor = '#c8c8ff';
+			}
+			
+			progress.style.width = `${(step / 19) * 100}%`;
+			
+			if (step >= 19) {
+				step = 0;
+				cycle++;
+				cycleElement.textContent = cycle + 1;
+				
+				if (cycle >= 5) {
+					stopBreathing();
+					text.textContent = 'Complete!';
+					circle.style.backgroundColor = '#d4edda';
+				}
+			}
+		}, 1000);
+	}
+	
+	function stopBreathing() {
+		clearInterval(breathingInterval);
+		document.getElementById('breathingText').textContent = 'Ready';
+		document.getElementById('breathingCircle').style.transform = 'scale(1)';
+		document.getElementById('breathingProgress').style.width = '0%';
+		cycle = 0;
+		document.getElementById('cycleCount').textContent = '1';
+	}
+	
+	// Resource navigation
+	function openResource(type) {
+		if (type === 'ptsd') {
+			window.location.href = 'resources.html#ptsd';
+		} else if (type === 'stress') {
+			window.location.href = 'resources.html#stress';
+		}
+	}
+	
+	// Check if user is logged in on page load
+	document.addEventListener('DOMContentLoaded', function() {
+		updateDateTime();
+		setInterval(updateDateTime, 60000);
+		
+		// Check if user is logged in
+		const currentUser = localStorage.getItem('current_user');
+		const isLoggedIn = localStorage.getItem('isLoggedIn');
+		const isAnonymous = localStorage.getItem('isAnonymous');
+		
+		if (!currentUser && isLoggedIn !== 'true' && isAnonymous !== 'true') {
+			// Not logged in, redirect to registration page
+			window.location.href = 'index.html';
+			return;
+		}
+		
+		// Load user data if available
+		if (currentUser) {
+			try {
+				const userData = JSON.parse(currentUser);
+				if (userData.firstName) {
+					document.getElementById('userName').textContent = userData.firstName + ' ' + (userData.lastName || '');
+					document.getElementById('greetingText').textContent = `Good morning, ${userData.firstName}! 🌅`;
+				}
+				if (userData.email) {
+					document.getElementById('currentUserEmail').textContent = userData.email;
+				}
+			} catch (e) {
+				console.error('Error parsing user data:', e);
+			}
+		}
+		
+		// Load saved mood
+		const savedMood = localStorage.getItem('todayMood');
+		if (savedMood) {
+			try {
+				const moodData = JSON.parse(savedMood);
+				document.getElementById('moodIntensity').value = moodData.intensity;
+				document.getElementById('moodNote').value = moodData.note;
+				
+				// Update UI to show selected mood
+				const moodButtons = document.querySelectorAll('.mood-btn');
+				moodButtons.forEach(btn => {
+					if (btn.textContent.includes(moodData.emoji)) {
+						btn.classList.add('selected');
+					}
+				});
+			} catch (e) {
+				console.error('Error loading mood:', e);
+			}
+		}
+		
+		// Set random daily tip
+		const randomTip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+		document.getElementById('dailyTip').textContent = randomTip;
+		
+		// Load stats from localStorage
+		const streak = localStorage.getItem('loginStreak') || '14';
+		const chats = localStorage.getItem('chatCount') || '27';
+		const resources = localStorage.getItem('resourceCount') || '12';
+		
+		document.getElementById('streakCount').textContent = streak;
+		document.getElementById('chatCount').textContent = chats;
+		document.getElementById('resourceCount').textContent = resources;
+		
+		// Set session start time
+		const sessionStart = localStorage.getItem('lastLogin') || new Date().toISOString();
+		const sessionDate = new Date(sessionStart);
+		const sessionTimeStr = sessionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		const today = new Date().toDateString();
+		const sessionDay = sessionDate.toDateString();
+		
+		let sessionDisplay = '';
+		if (today === sessionDay) {
+			sessionDisplay = `Today, ${sessionTimeStr}`;
+		} else {
+			sessionDisplay = `${sessionDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}, ${sessionTimeStr}`;
+		}
+		
+		document.getElementById('sessionStartTime').textContent = sessionDisplay;
+	});
+</script>

@@ -1,58 +1,1512 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MindEase Resources</title>
+  <title>MindEase Resources | Mental Wellness Library</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
-    body { background: #f6f9fc; }
-    .sidebar { width: 250px; min-height: 100vh; background: #fff; border-right: 1px solid #ddd; }
+    body { 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .sidebar { 
+      width: 280px; 
+      min-height: 100vh; 
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(221, 221, 221, 0.5);
+      box-shadow: 3px 0 20px rgba(0,0,0,0.08);
+    }
+    
+    .resource-category {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .resource-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+      height: 100%;
+    }
+    
+    .resource-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    
+    .resource-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-ring {
+      width: 50px;
+      height: 50px;
+    }
+    
+    .progress-ring-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    
+    .search-box {
+      border-radius: 50px;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      transition: all 0.3s;
+    }
+    
+    .search-box:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .filter-btn {
+      border-radius: 50px;
+      padding: 0.5rem 1.5rem;
+      transition: all 0.3s;
+    }
+    
+    .filter-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+    }
+    
+    .category-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      display: inline-block;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 280px;
+      right: 0;
+      height: 4px;
+      background: #e0e0e0;
+      z-index: 1000;
+    }
+    
+    .reading-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    
+    .bookmark-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s;
+    }
+    
+    .bookmark-btn:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+    
+    .bookmark-btn.bookmarked {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+    
+    .duration-badge {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+    }
+    
+    .toolkit-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .toolkit-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .toolkit-item:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(10px);
+    }
+    
+    .modal-content {
+      border-radius: 20px;
+      border: none;
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px 20px 0 0;
+    }
+    
+    .modal-body {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+    
+    .resource-content h4 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+    }
+    
+    .resource-content h5 {
+      color: #555;
+      margin: 1.5rem 0 1rem;
+    }
+    
+    .resource-content p {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: #555;
+    }
+    
+    .resource-content ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .resource-content li {
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+    
+    .technique-box {
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 10px 10px 0;
+    }
+    
+    .tip-box {
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 10px 10px 0;
+    }
   </style>
 </head>
 
 <body>
-
-<div class="d-flex">
-
-  <!-- Sidebar -->
-  <div class="sidebar p-4">
-    <h4 class="fw-bold mb-4 text-primary">💙 MindEase</h4>
-    <ul class="nav flex-column">
-      <li class="nav-item mb-3"><a class="nav-link text-dark" href="dashboard.html">Dashboard</a></li>
-      <li class="nav-item mb-3"><a class="nav-link text-dark" href="chat.html">Chat</a></li>
-      <li class="nav-item mb-3"><a class="nav-link fw-bold text-primary" href="resources.html">Resources</a></li>
-      <li class="nav-item mb-3"><a class="nav-link text-dark" href="profile.html">Profile</a></li>
-    </ul>
+  <!-- Reading Progress Bar -->
+  <div class="reading-progress">
+    <div class="reading-progress-bar" id="readingProgress"></div>
   </div>
 
-  <!-- Content -->
-  <div class="container-fluid p-4">
-    <h3 class="mb-4">Mental Health Resources</h3>
+  <div class="d-flex">
+    <!-- Enhanced Sidebar -->
+    <div class="sidebar p-4">
+      <div class="d-flex align-items-center mb-5">
+        <div class="rounded-circle bg-primary p-3 me-3 shadow">
+          <i class="bi bi-journal-bookmark text-white fs-4"></i>
+        </div>
+        <h4 class="fw-bold mb-0 text-primary">💙 MindEase</h4>
+      </div>
+      
+      <ul class="nav flex-column">
+        <li class="nav-item mb-3">
+          <a class="nav-link text-dark d-flex align-items-center" href="dashboard.html">
+            <i class="bi bi-grid me-3"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item mb-3">
+          <a class="nav-link text-dark d-flex align-items-center" href="chat.html">
+            <i class="bi bi-chat-dots me-3"></i> Chat
+          </a>
+        </li>
+        <li class="nav-item mb-3">
+          <a class="nav-link fw-bold text-primary d-flex align-items-center" href="resources.html">
+            <i class="bi bi-journal-bookmark-fill me-3"></i> Resources
+          </a>
+        </li>
+        <li class="nav-item mb-3">
+          <a class="nav-link text-dark d-flex align-items-center" href="profile.html">
+            <i class="bi bi-person me-3"></i> Profile
+          </a>
+        </li>
+      </ul>
+      
+      <div class="mt-5 pt-4 border-top">
+        <h6 class="fw-bold mb-3">Resource Categories</h6>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="category-badge bg-primary bg-opacity-10 text-primary">PTSD</span>
+          <span class="category-badge bg-success bg-opacity-10 text-success">Anxiety</span>
+          <span class="category-badge bg-warning bg-opacity-10 text-warning">Stress</span>
+          <span class="category-badge bg-info bg-opacity-10 text-info">Mindfulness</span>
+          <span class="category-badge bg-danger bg-opacity-10 text-danger">Depression</span>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <h6 class="fw-bold mb-3">My Bookmarks</h6>
+        <div id="bookmarksList" class="small">
+          <!-- Bookmarks will be loaded here -->
+          <div class="text-muted">No bookmarks yet</div>
+        </div>
+      </div>
+    </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card shadow mb-3">
-          <div class="card-body">
-            <h5>Coping with PTSD</h5>
-            <p>Learn grounding and relaxation techniques.</p>
+    <!-- Main Content -->
+    <div class="container-fluid p-4">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="fw-bold mb-1">Mental Health Resources</h3>
+          <p class="text-muted">Discover tools, articles, and exercises for your wellness journey</p>
+        </div>
+        <div class="d-flex align-items-center">
+         
+          <button class="btn btn-primary" onclick="showResourceModal()">
+            <i class="bi bi-plus-lg me-2"></i>Add Resource
+          </button>
+        </div>
+      </div>
+      
+      <!-- Filter Buttons -->
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <button class="btn filter-btn btn-outline-primary active" onclick="filterByCategory('all')">
+          All Resources
+        </button>
+        <button class="btn filter-btn btn-outline-primary" onclick="filterByCategory('ptsd')">
+          PTSD Support
+        </button>
+        <button class="btn filter-btn btn-outline-primary" onclick="filterByCategory('anxiety')">
+          Anxiety Management
+        </button>
+        <button class="btn filter-btn btn-outline-primary" onclick="filterByCategory('stress')">
+          Stress Relief
+        </button>
+        <button class="btn filter-btn btn-outline-primary" onclick="filterByCategory('mindfulness')">
+          Mindfulness
+        </button>
+        <button class="btn filter-btn btn-outline-primary" onclick="filterByCategory('depression')">
+          Depression Support
+        </button>
+      </div>
+      
+      <!-- Quick Toolkit -->
+      <div class="toolkit-card" id="ptsd">
+        <h4 class="fw-bold mb-3">🛠️ PTSD Support Toolkit</h4>
+        <p class="opacity-90 mb-4">Essential resources for understanding and managing PTSD symptoms</p>
+        
+        <div class="toolkit-item" onclick="openResourceDetail('grounding-techniques')">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-white bg-opacity-20 p-2 me-3">
+              <i class="bi bi-compass"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Grounding Techniques</h6>
+              <small class="opacity-75">Immediate tools to stay present during triggers</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="toolkit-item" onclick="openResourceDetail('safety-planning')">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-white bg-opacity-20 p-2 me-3">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Safety Planning Guide</h6>
+              <small class="opacity-75">Creating a personalized safety plan for difficult moments</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="toolkit-item" onclick="openResourceDetail('sleep-hygiene')">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-white bg-opacity-20 p-2 me-3">
+              <i class="bi bi-moon"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Sleep Hygiene for PTSD</h6>
+              <small class="opacity-75">Improving sleep quality and reducing nightmares</small>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="col-md-4">
-        <div class="card shadow mb-3">
-          <div class="card-body">
-            <h5>Managing Stress</h5>
-            <p>Daily stress management exercises.</p>
+      
+      <!-- Resource Grid -->
+      <div class="row g-4" id="resourcesGrid">
+        <!-- Resource 1: Coping with PTSD -->
+        <div class="col-md-4" data-category="ptsd stress">
+          <div class="resource-card card shadow-sm" onclick="openResourceDetail('coping-ptsd')">
+            <button class="bookmark-btn" onclick="toggleBookmark(event, 'coping-ptsd')">
+              <i class="bi bi-bookmark"></i>
+            </button>
+            <div class="card-body p-4">
+              <div class="resource-icon bg-primary bg-opacity-10 text-primary mb-3">
+                <i class="bi bi-emoji-smile"></i>
+              </div>
+              <h5 class="fw-bold mb-2">Coping with PTSD</h5>
+              <p class="text-muted small mb-3">Learn grounding and relaxation techniques to manage PTSD symptoms effectively.</p>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="progress-ring me-2">
+                    <svg viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#667eea" stroke-width="3" stroke-dasharray="75, 100"
+                        class="progress-ring-circle"/>
+                    </svg>
+                  </div>
+                  <small class="text-muted">75% read</small>
+                </div>
+                <span class="badge bg-primary">Essential</span>
+              </div>
+            </div>
+            <div class="duration-badge">
+              <i class="bi bi-clock me-1"></i> 15 min
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource 2: Managing Stress -->
+        <div class="col-md-4" data-category="stress anxiety">
+          <div class="resource-card card shadow-sm" onclick="openResourceDetail('managing-stress')">
+            <button class="bookmark-btn" onclick="toggleBookmark(event, 'managing-stress')">
+              <i class="bi bi-bookmark"></i>
+            </button>
+            <div class="card-body p-4">
+              <div class="resource-icon bg-warning bg-opacity-10 text-warning mb-3">
+                <i class="bi bi-lightning-charge"></i>
+              </div>
+              <h5 class="fw-bold mb-2">Managing Stress</h5>
+              <p class="text-muted small mb-3">Daily stress management exercises and techniques for better resilience.</p>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="progress-ring me-2">
+                    <svg viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#ffc107" stroke-width="3" stroke-dasharray="40, 100"
+                        class="progress-ring-circle"/>
+                    </svg>
+                  </div>
+                  <small class="text-muted">40% read</small>
+                </div>
+                <span class="badge bg-success">Popular</span>
+              </div>
+            </div>
+            <div class="duration-badge">
+              <i class="bi bi-clock me-1"></i> 20 min
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource 3: Mindfulness Basics -->
+        <div class="col-md-4" data-category="mindfulness">
+          <div class="resource-card card shadow-sm" onclick="openResourceDetail('mindfulness-basics')">
+            <button class="bookmark-btn" onclick="toggleBookmark(event, 'mindfulness-basics')">
+              <i class="bi bi-bookmark"></i>
+            </button>
+            <div class="card-body p-4">
+              <div class="resource-icon bg-info bg-opacity-10 text-info mb-3">
+                <i class="bi bi-cloud-sun"></i>
+              </div>
+              <h5 class="fw-bold mb-2">Mindfulness Basics</h5>
+              <p class="text-muted small mb-3">Introduction to mindfulness meditation and present-moment awareness.</p>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="progress-ring me-2">
+                    <svg viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#0dcaf0" stroke-width="3" stroke-dasharray="90, 100"
+                        class="progress-ring-circle"/>
+                    </svg>
+                  </div>
+                  <small class="text-muted">90% read</small>
+                </div>
+                <span class="badge bg-info">Beginner</span>
+              </div>
+            </div>
+            <div class="duration-badge">
+              <i class="bi bi-clock me-1"></i> 10 min
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource 4: Anxiety Coping Strategies -->
+        <div class="col-md-4" data-category="anxiety">
+          <div class="resource-card card shadow-sm" onclick="openResourceDetail('anxiety-coping')">
+            <button class="bookmark-btn" onclick="toggleBookmark(event, 'anxiety-coping')">
+              <i class="bi bi-bookmark"></i>
+            </button>
+            <div class="card-body p-4">
+              <div class="resource-icon bg-success bg-opacity-10 text-success mb-3">
+                <i class="bi bi-heart-pulse"></i>
+              </div>
+              <h5 class="fw-bold mb-2">Anxiety Coping Strategies</h5>
+              <p class="text-muted small mb-3">Practical techniques to manage anxiety in daily life situations.</p>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="progress-ring me-2">
+                    <svg viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#198754" stroke-width="3" stroke-dasharray="60, 100"
+                        class="progress-ring-circle"/>
+                    </svg>
+                  </div>
+                  <small class="text-muted">60% read</small>
+                </div>
+                <span class="badge bg-warning">Intermediate</span>
+              </div>
+            </div>
+            <div class="duration-badge">
+              <i class="bi bi-clock me-1"></i> 25 min
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource 5: Depression Support Guide -->
+        <div class="col-md-4" data-category="depression">
+          <div class="resource-card card shadow-sm" onclick="openResourceDetail('depression-support')">
+            <button class="bookmark-btn" onclick="toggleBookmark(event, 'depression-support')">
+              <i class="bi bi-bookmark"></i>
+            </button>
+            <div class="card-body p-4">
+              <div class="resource-icon bg-danger bg-opacity-10 text-danger mb-3">
+                <i class="bi bi-sun"></i>
+              </div>
+              <h5 class="fw-bold mb-2">Depression Support Guide</h5>
+              <p class="text-muted small mb-3">Understanding depression and building a support system for recovery.</p>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="progress-ring me-2">
+                    <svg viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#dc3545" stroke-width="3" stroke-dasharray="30, 100"
+                        class="progress-ring-circle"/>
+                    </svg>
+                  </div>
+                  <small class="text-muted">30% read</small>
+                </div>
+                <span class="badge bg-danger">Advanced</span>
+              </div>
+            </div>
+            <div class="duration-badge">
+              <i class="bi bi-clock me-1"></i> 30 min
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource 6: Breathing Exercises -->
+        <div class="col-md-4" data-category="mindfulness stress">
+          <div class="resource-card card shadow-sm" onclick="openResourceDetail('breathing-exercises')">
+            <button class="bookmark-btn" onclick="toggleBookmark(event, 'breathing-exercises')">
+              <i class="bi bi-bookmark"></i>
+            </button>
+            <div class="card-body p-4">
+              <div class="resource-icon bg-purple bg-opacity-10 text-purple mb-3">
+                <i class="bi bi-wind"></i>
+              </div>
+              <h5 class="fw-bold mb-2">Breathing Exercises</h5>
+              <p class="text-muted small mb-3">Simple breathing techniques for immediate calm and relaxation.</p>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="progress-ring me-2">
+                    <svg viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none" stroke="#6f42c1" stroke-width="3" stroke-dasharray="100, 100"
+                        class="progress-ring-circle"/>
+                    </svg>
+                  </div>
+                  <small class="text-muted">Completed</small>
+                </div>
+                <span class="badge bg-success">Complete</span>
+              </div>
+            </div>
+            <div class="duration-badge">
+              <i class="bi bi-clock me-1"></i> 5 min
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- No Results Message -->
+      <div id="noResults" class="text-center py-5" style="display: none;">
+        <i class="bi bi-search fs-1 text-muted mb-3"></i>
+        <h4 class="text-muted">No resources found</h4>
+        <p class="text-muted">Try adjusting your search or filter criteria</p>
+      </div>
+      
+      <!-- Resource Statistics -->
+      <div class="row mt-5">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h2 class="fw-bold text-primary" id="totalResources">6</h2>
+              <small class="text-muted">Total Resources</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h2 class="fw-bold text-success" id="completedResources">1</h2>
+              <small class="text-muted">Completed</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h2 class="fw-bold text-warning" id="bookmarkedResources">0</h2>
+              <small class="text-muted">Bookmarked</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h2 class="fw-bold text-info" id="timeSpent">2h 30m</h2>
+              <small class="text-muted">Time Spent</small>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-</div>
+  <!-- Resource Detail Modal -->
+  <div class="modal fade" id="resourceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-white" id="resourceModalTitle">Resource Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="resourceModalBody">
+          <!-- Content loaded dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Add Resource Modal -->
+  <div class="modal fade" id="addResourceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Suggest a Resource</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3">Suggest a resource you'd like to see added to our library.</p>
+          <div class="mb-3">
+            <label class="form-label">Resource Title</label>
+            <input type="text" class="form-control" placeholder="Enter resource title">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="3" placeholder="Brief description of the resource"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select">
+              <option>PTSD Support</option>
+              <option>Stress Management</option>
+              <option>Anxiety Relief</option>
+              <option>Mindfulness</option>
+              <option>Depression Support</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="submitResourceSuggestion()">Submit Suggestion</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Complete Resource Data with Substantial Content
+    const resources = {
+      'coping-ptsd': {
+        title: 'Coping with PTSD: Grounding Techniques',
+        category: 'ptsd',
+        duration: '15 min',
+        icon: 'bi-emoji-smile',
+        color: 'primary',
+        content: `
+          <div class="resource-content">
+            <h4>🌱 Coping with PTSD: Grounding Techniques</h4>
+            <p class="lead">Learn effective strategies to manage PTSD symptoms and regain control of your life.</p>
+            
+            <div class="technique-box">
+              <h5>📝 What Are Grounding Techniques?</h5>
+              <p>Grounding techniques are exercises that help you stay in the present moment when you feel overwhelmed by traumatic memories, flashbacks, or intense emotions. They work by engaging your senses and redirecting your focus to the here and now.</p>
+            </div>
+            
+            <h5>🎯 The 5-4-3-2-1 Technique</h5>
+            <p>This is one of the most effective grounding exercises. When you feel overwhelmed:</p>
+            <ul>
+              <li><strong>5 things you can SEE:</strong> Look around and name five things you can see.</li>
+              <li><strong>4 things you can FEEL:</strong> Notice four things you can feel against your body.</li>
+              <li><strong>3 things you can HEAR:</strong> Listen for three distinct sounds.</li>
+              <li><strong>2 things you can SMELL:</strong> Identify two scents around you.</li>
+              <li><strong>1 thing you can TASTE:</strong> Notice one taste in your mouth or recall a favorite taste.</li>
+            </ul>
+            
+            <h5>🌬️ Breathing Exercises for Calm</h5>
+            <div class="technique-box">
+              <h6>4-7-8 Breathing Method</h6>
+              <p>This breathing pattern helps calm the nervous system:</p>
+              <ol>
+                <li>Inhale quietly through your nose for 4 seconds</li>
+                <li>Hold your breath for 7 seconds</li>
+                <li>Exhale completely through your mouth for 8 seconds</li>
+                <li>Repeat this cycle 4 times</li>
+              </ol>
+            </div>
+            
+            <h5>💎 Object Focus Grounding</h5>
+            <p>Choose an object nearby and describe it in extreme detail:</p>
+            <ul>
+              <li>What color is it? Is it one color or multiple?</li>
+              <li>What texture does it have? Smooth, rough, soft?</li>
+              <li>How heavy does it feel?</li>
+              <li>What temperature is it?</li>
+              <li>What is its purpose or function?</li>
+            </ul>
+            
+            <div class="tip-box">
+              <h6>💡 Pro Tip</h6>
+              <p>Practice these techniques regularly when you're feeling calm. This makes them easier to use when you're actually feeling overwhelmed.</p>
+            </div>
+            
+            <h5>📅 Creating a Daily Grounding Routine</h5>
+            <p>Incorporate grounding into your daily life:</p>
+            <ul>
+              <li><strong>Morning:</strong> Start with 5 minutes of mindful breathing</li>
+              <li><strong>Afternoon:</strong> Use the 5-4-3-2-1 technique during lunch</li>
+              <li><strong>Evening:</strong> Practice object focus before bed</li>
+              <li><strong>When needed:</strong> Use any technique when you feel triggers coming</li>
+            </ul>
+            
+            <p class="mt-4"><strong>Remember:</strong> Healing takes time. Be patient with yourself and celebrate small victories. These techniques are tools in your recovery toolkit - use them as often as you need.</p>
+          </div>
+        `
+      },
+      
+      'managing-stress': {
+        title: 'Managing Daily Stress Effectively',
+        category: 'stress',
+        duration: '20 min',
+        icon: 'bi-lightning-charge',
+        color: 'warning',
+        content: `
+          <div class="resource-content">
+            <h4>⚡ Managing Daily Stress Effectively</h4>
+            <p class="lead">Practical techniques for reducing stress and improving resilience in your daily life.</p>
+            
+            <div class="technique-box">
+              <h5>🧠 Understanding Stress</h5>
+              <p>Stress is your body's response to challenges or demands. While acute stress can be helpful, chronic stress can negatively impact both physical and mental health. Learning to manage stress is crucial for overall well-being.</p>
+            </div>
+            
+            <h5>🔄 The Stress Response Cycle</h5>
+            <p>Complete the stress cycle to prevent stress accumulation:</p>
+            <ul>
+              <li><strong>Physical Activity:</strong> 20-30 minutes of exercise</li>
+              <li><strong>Breathing:</strong> Deep, controlled breathing exercises</li>
+              <li><strong>Positive Social Interaction:</strong> Laughter or affection</li>
+              <li><strong>Creative Expression:</strong> Art, music, or writing</li>
+              <li><strong>Crying:</strong> Allowing emotional release</li>
+            </ul>
+            
+            <h5>🧘 Daily Stress Management Practices</h5>
+            <div class="technique-box">
+              <h6>Morning Stress Prevention</h6>
+              <ol>
+                <li>Start with 5 minutes of gratitude journaling</li>
+                <li>Plan your day with realistic expectations</li>
+                <li>Eat a protein-rich breakfast</li>
+                <li>Practice 10 minutes of stretching or yoga</li>
+              </ol>
+            </div>
+            
+            <div class="technique-box">
+              <h6>Afternoon Stress Interruption</h6>
+              <ol>
+                <li>Take a 10-minute walking break every 90 minutes</li>
+                <li>Practice box breathing: Inhale 4, Hold 4, Exhale 4, Hold 4</li>
+                <li>Drink water regularly (dehydration increases stress)</li>
+                <li>Listen to calming music for 5 minutes</li>
+              </ol>
+            </div>
+            
+            <h5>🌿 Natural Stress Relievers</h5>
+            <p>Incorporate these into your routine:</p>
+            <ul>
+              <li><strong>Nature Therapy:</strong> Spend 20 minutes in nature daily</li>
+              <li><strong>Aromatherapy:</strong> Use lavender, chamomile, or bergamot</li>
+              <li><strong>Warm Baths:</strong> Add Epsom salts and essential oils</li>
+              <li><strong>Herbal Teas:</strong> Chamomile, passionflower, or lemon balm</li>
+            </ul>
+            
+            <h5>📝 Stress Journaling Techniques</h5>
+            <p>Write to process stress:</p>
+            <ol>
+              <li>What's causing my stress right now?</li>
+              <li>How is my body responding to this stress?</li>
+              <li>What can I control in this situation?</li>
+              <li>What's one small action I can take?</li>
+              <li>What am I grateful for despite this stress?</li>
+            </ol>
+            
+            <div class="tip-box">
+              <h6>💡 Quick Stress Relief Tips</h6>
+              <ul>
+                <li>Place a cold compress on your wrists or neck</li>
+                <li>Hum or sing to activate the vagus nerve</li>
+                <li>Massage your hands or feet for 2 minutes</li>
+                <li>Look at something green (nature's calming color)</li>
+                <li>Practice progressive muscle relaxation</li>
+              </ul>
+            </div>
+            
+            <p class="mt-4"><strong>Remember:</strong> Stress management is a skill that improves with practice. Start with one technique and gradually build your stress-resilience toolkit.</p>
+          </div>
+        `
+      },
+      
+      'mindfulness-basics': {
+        title: 'Mindfulness Basics: Present Moment Awareness',
+        category: 'mindfulness',
+        duration: '10 min',
+        icon: 'bi-cloud-sun',
+        color: 'info',
+        content: `
+          <div class="resource-content">
+            <h4>☀️ Mindfulness Basics: Present Moment Awareness</h4>
+            <p class="lead">Learn the fundamentals of mindfulness meditation and how to cultivate present-moment awareness in daily life.</p>
+            
+            <div class="technique-box">
+              <h5>🧘 What is Mindfulness?</h5>
+              <p>Mindfulness is the practice of paying attention to the present moment with curiosity and without judgment. It's about being fully present with whatever you're doing, rather than being lost in thoughts about the past or future.</p>
+            </div>
+            
+            <h5>🎯 Basic Mindfulness Meditation</h5>
+            <p>Start with this simple 5-minute practice:</p>
+            <ol>
+              <li><strong>Find a comfortable position</strong> - Sit or lie down comfortably</li>
+              <li><strong>Set a timer</strong> - Start with 5 minutes</li>
+              <li><strong>Focus on your breath</strong> - Notice the sensation of breathing</li>
+              <li><strong>Notice when your mind wanders</strong> - Gently bring it back to your breath</li>
+              <li><strong>End gently</strong> - Slowly return to normal awareness</li>
+            </ol>
+            
+            <h5>🌼 Mindful Activities for Daily Life</h5>
+            <div class="technique-box">
+              <h6>Mindful Eating</h6>
+              <p>Practice with one meal or snack:</p>
+              <ul>
+                <li>Notice the colors and textures of your food</li>
+                <li>Smell the aroma before eating</li>
+                <li>Take small bites and chew slowly</li>
+                <li>Notice the flavors and textures in your mouth</li>
+                <li>Put your utensil down between bites</li>
+              </ul>
+            </div>
+            
+            <div class="technique-box">
+              <h6>Mindful Walking</h6>
+              <p>Transform ordinary walking into meditation:</p>
+              <ul>
+                <li>Walk slower than usual</li>
+                <li>Feel your feet touching the ground</li>
+                <li>Notice the movement of your body</li>
+                <li>Observe your surroundings without judgment</li>
+                <li>If your mind wanders, gently return to the sensation of walking</li>
+              </ul>
+            </div>
+            
+            <h5>🧠 Common Mindfulness Challenges</h5>
+            <p>Everyone faces these - they're normal!</p>
+            <ul>
+              <li><strong>Restlessness:</strong> It's okay to fidget. Just notice it.</li>
+              <li><strong>Sleepiness:</strong> Try meditating with eyes open or standing.</li>
+              <li><strong>Boredom:</strong> See if you can be curious about the boredom.</li>
+              <li><strong>Self-judgment:</strong> Notice the judgment and let it pass.</li>
+              <li><strong>Expectations:</strong> Let go of trying to achieve anything.</li>
+            </ul>
+            
+            <h5>🌈 Benefits of Regular Practice</h5>
+            <p>With consistent practice, you may experience:</p>
+            <ul>
+              <li>Reduced stress and anxiety</li>
+              <li>Improved focus and concentration</li>
+              <li>Better emotional regulation</li>
+              <li>Increased self-awareness</li>
+              <li>Enhanced relationships</li>
+              <li>Better sleep quality</li>
+            </ul>
+            
+            <div class="tip-box">
+              <h6>💡 Starting Tips</h6>
+              <ul>
+                <li>Start with just 2-5 minutes daily</li>
+                <li>Use a meditation app for guidance</li>
+                <li>Practice at the same time each day</li>
+                <li>Be kind to yourself when you miss a day</li>
+                <li>Remember: The goal is to practice, not to be perfect</li>
+              </ul>
+            </div>
+            
+            <p class="mt-4"><strong>Remember:</strong> Mindfulness is a skill that develops with practice. Every moment you bring awareness to the present is a success.</p>
+          </div>
+        `
+      },
+      
+      'anxiety-coping': {
+        title: 'Anxiety Coping Strategies for Daily Life',
+        category: 'anxiety',
+        duration: '25 min',
+        icon: 'bi-heart-pulse',
+        color: 'success',
+        content: `
+          <div class="resource-content">
+            <h4>💓 Anxiety Coping Strategies for Daily Life</h4>
+            <p class="lead">Practical techniques to manage anxiety and navigate challenging situations with greater ease.</p>
+            
+            <div class="technique-box">
+              <h5>🔄 Understanding Anxiety</h5>
+              <p>Anxiety is your body's natural response to perceived threats. While uncomfortable, it's not dangerous. These strategies help you manage anxiety so it doesn't manage you.</p>
+            </div>
+            
+            <h5>🎯 Immediate Anxiety Relief Techniques</h5>
+            <p>When anxiety strikes suddenly:</p>
+            
+            <div class="technique-box">
+              <h6>5-4-3-2-1 Grounding</h6>
+              <p>Engage all your senses to return to the present:</p>
+              <ul>
+                <li>5 things you can see</li>
+                <li>4 things you can touch</li>
+                <li>3 things you can hear</li>
+                <li>2 things you can smell</li>
+                <li>1 thing you can taste</li>
+              </ul>
+            </div>
+            
+            <div class="technique-box">
+              <h6>Temperature Change</h6>
+              <p>Use temperature to interrupt anxiety:</p>
+              <ul>
+                <li>Hold an ice cube in your hand</li>
+                <li>Splash cold water on your face</li>
+                <li>Place a cold compress on your neck</li>
+                <li>Take a cool shower</li>
+              </ul>
+            </div>
+            
+            <h5>🌬️ Breathing Techniques for Anxiety</h5>
+            <p>Specific patterns to calm your nervous system:</p>
+            
+            <div class="technique-box">
+              <h6>Diaphragmatic Breathing</h6>
+              <ol>
+                <li>Place one hand on your chest, one on your belly</li>
+                <li>Breathe in slowly through your nose (4 seconds)</li>
+                <li>Feel your belly expand (chest should stay still)</li>
+                <li>Exhale slowly through pursed lips (6 seconds)</li>
+                <li>Repeat 5-10 times</li>
+              </ol>
+            </div>
+            
+            <div class="technique-box">
+              <h6>Box Breathing</h6>
+              <ol>
+                <li>Inhale for 4 seconds</li>
+                <li>Hold for 4 seconds</li>
+                <li>Exhale for 4 seconds</li>
+                <li>Hold for 4 seconds</li>
+                <li>Repeat 4-5 times</li>
+              </ol>
+            </div>
+            
+            <h5>📝 Cognitive Strategies</h5>
+            <p>Change your relationship with anxious thoughts:</p>
+            <ul>
+              <li><strong>Thought Labeling:</strong> "I'm having the thought that..."</li>
+              <li><strong>Worry Time:</strong> Schedule 15 minutes daily for worrying</li>
+              <li><strong>Fact Checking:</strong> Separate facts from feelings</li>
+              <li><strong>Probability Testing:</strong> What's the actual likelihood?</li>
+              <li><strong>Worst Case/Best Case:</strong> Consider all possibilities</li>
+            </ul>
+            
+            <h5>🏃 Lifestyle Adjustments</h5>
+            <p>Reduce overall anxiety levels:</p>
+            <ul>
+              <li><strong>Regular Exercise:</strong> 30 minutes most days</li>
+              <li><strong>Balanced Nutrition:</strong> Regular meals, limit caffeine</li>
+              <li><strong>Sleep Hygiene:</strong> 7-9 hours, consistent schedule</li>
+              <li><strong>Digital Detox:</strong> Limit news/social media</li>
+              <li><strong>Social Connection:</strong> Regular positive interactions</li>
+            </ul>
+            
+            <div class="tip-box">
+              <h6>💡 Anxiety Toolkit</h6>
+              <p>Create a physical or digital toolkit:</p>
+              <ul>
+                <li>Calming music playlist</li>
+                <li>Favorite photos or memories</li>
+                <li>Comforting scents (lavender, chamomile)</li>
+                <li>Stress ball or fidget toy</li>
+                <li>List of grounding techniques</li>
+                <li>Emergency contact numbers</li>
+              </ul>
+            </div>
+            
+            <p class="mt-4"><strong>Remember:</strong> Anxiety is manageable. With practice, these techniques become automatic responses that help you navigate anxious moments with greater skill and confidence.</p>
+          </div>
+        `
+      },
+      
+      'depression-support': {
+        title: 'Depression Support Guide: Understanding and Recovery',
+        category: 'depression',
+        duration: '30 min',
+        icon: 'bi-sun',
+        color: 'danger',
+        content: `
+          <div class="resource-content">
+            <h4>🌞 Depression Support Guide: Understanding and Recovery</h4>
+            <p class="lead">Comprehensive guide to understanding depression and building an effective support system for recovery.</p>
+            
+            <div class="technique-box">
+              <h5>💭 Understanding Depression</h5>
+              <p>Depression is more than just feeling sad. It's a complex condition that affects thoughts, emotions, behaviors, and physical health. Understanding depression is the first step toward managing it effectively.</p>
+            </div>
+            
+            <h5>🎯 Key Symptoms to Recognize</h5>
+            <p>Depression can manifest in various ways:</p>
+            <ul>
+              <li><strong>Emotional:</strong> Persistent sadness, emptiness, hopelessness</li>
+              <li><strong>Cognitive:</strong> Difficulty concentrating, negative thoughts</li>
+              <li><strong>Physical:</strong> Fatigue, sleep changes, appetite changes</li>
+              <li><strong>Behavioral:</strong> Loss of interest, social withdrawal</li>
+              <li><strong>Motivational:</strong> Lack of energy, difficulty starting tasks</li>
+            </ul>
+            
+            <h5>🌱 Daily Recovery Practices</h5>
+            <p>Small, consistent actions that support recovery:</p>
+            
+            <div class="technique-box">
+              <h6>Morning Routine (Even When It's Hard)</h6>
+              <ol>
+                <li>Get out of bed at the same time daily</li>
+                <li>Drink a glass of water</li>
+                <li>Take 3 deep breaths</li>
+                <li>Open curtains/blinds for natural light</li>
+                <li>Complete one small task (make bed, brush teeth)</li>
+              </ol>
+            </div>
+            
+            <div class="technique-box">
+              <h6>Evening Wind-Down</h6>
+              <ol>
+                <li>Limit screens 1 hour before bed</li>
+                <li>Write down 3 things that went okay today</li>
+                <li>Practice gentle stretching</li>
+                <li>Read something uplifting</li>
+                <li>Set clothes out for tomorrow</li>
+              </ol>
+            </div>
+            
+            <h5>🧠 Cognitive Strategies</h5>
+            <p>Challenge depressive thought patterns:</p>
+            <ul>
+              <li><strong>Thought Records:</strong> Write down negative thoughts and evidence against them</li>
+              <li><strong>Behavioral Activation:</strong> Schedule pleasurable activities</li>
+              <li><strong>Gratitude Practice:</strong> Note 3 good things daily</li>
+              <li><strong>Self-Compassion:</strong> Talk to yourself like a friend</li>
+              <li><strong>Accomplishment Tracking:</strong> Record small wins</li>
+            </ul>
+            
+            <h5>🤝 Building Your Support System</h5>
+            <p>You don't have to face depression alone:</p>
+            <ul>
+              <li><strong>Professional Support:</strong> Therapist, psychiatrist, counselor</li>
+              <li><strong>Medical Support:</strong> Primary care doctor</li>
+              <li><strong>Peer Support:</strong> Support groups (in-person or online)</li>
+              <li><strong>Social Support:</strong> Trusted friends and family</li>
+              <li><strong>Community Resources:</strong> Helplines, community centers</li>
+            </ul>
+            
+            <h5>🌈 Self-Care Strategies</h5>
+            <p>Nurture yourself through the recovery process:</p>
+            
+            <div class="technique-box">
+              <h6>Physical Self-Care</h6>
+              <ul>
+                <li>Gentle movement (walking, stretching)</li>
+                <li>Regular, balanced meals</li>
+                <li>Consistent sleep schedule</li>
+                <li>Sunlight exposure daily</li>
+                <li>Basic hygiene (shower, brush teeth)</li>
+              </ul>
+            </div>
+            
+            <div class="technique-box">
+              <h6>Emotional Self-Care</h6>
+              <ul>
+                <li>Allow yourself to feel emotions</li>
+                <li>Set healthy boundaries</li>
+                <li>Practice saying "no"</li>
+                <li>Engage in creative expression</li>
+                <li>Listen to music that matches your mood</li>
+              </ul>
+            </div>
+            
+            <div class="tip-box">
+              <h6>💡 Recovery Reminders</h6>
+              <ul>
+                <li>Recovery is not linear - ups and downs are normal</li>
+                <li>Progress is measured in weeks/months, not days</li>
+                <li>Rest is productive when you're healing</li>
+                <li>Asking for help is a sign of strength</li>
+                <li>Small steps forward count as progress</li>
+              </ul>
+            </div>
+            
+            <p class="mt-4"><strong>Remember:</strong> Depression is treatable. With the right support and strategies, recovery is possible. Be patient and compassionate with yourself throughout this journey.</p>
+          </div>
+        `
+      },
+      
+      'breathing-exercises': {
+        title: 'Breathing Exercises for Immediate Calm',
+        category: 'mindfulness',
+        duration: '5 min',
+        icon: 'bi-wind',
+        color: 'purple',
+        content: `
+          <div class="resource-content">
+            <h4>💨 Breathing Exercises for Immediate Calm</h4>
+            <p class="lead">Simple, effective breathing techniques that you can use anywhere to quickly reduce stress and anxiety.</p>
+            
+            <div class="technique-box">
+              <h5>🌬️ Why Breathing Works</h5>
+              <p>Conscious breathing activates your parasympathetic nervous system, which counters the stress response. These techniques can calm your mind in minutes.</p>
+            </div>
+            
+            <h5>🎯 4-7-8 Breathing (Relaxing Breath)</h5>
+            <p>Perfect for falling asleep or calming anxiety:</p>
+            <div class="technique-box">
+              <ol>
+                <li>Exhale completely through your mouth</li>
+                <li>Close your mouth and inhale quietly through your nose for 4 seconds</li>
+                <li>Hold your breath for 7 seconds</li>
+                <li>Exhale completely through your mouth for 8 seconds</li>
+                <li>Repeat this cycle 4 times</li>
+              </ol>
+              <p class="mt-2"><strong>Benefits:</strong> Reduces anxiety, helps with sleep, calms the mind</p>
+            </div>
+            
+            <h5>📦 Box Breathing (Square Breathing)</h5>
+            <p>Great for focus and stress relief:</p>
+            <div class="technique-box">
+              <ol>
+                <li>Inhale slowly for 4 seconds</li>
+                <li>Hold your breath for 4 seconds</li>
+                <li>Exhale slowly for 4 seconds</li>
+                <li>Hold your breath for 4 seconds</li>
+                <li>Repeat 4-5 times</li>
+              </ol>
+              <p class="mt-2"><strong>Benefits:</strong> Improves focus, reduces stress, balances energy</p>
+            </div>
+            
+            <h5>🌊 Ocean Breathing (Ujjayi Breath)</h5>
+            <p>Creates a soothing ocean-like sound:</p>
+            <div class="technique-box">
+              <ol>
+                <li>Inhale deeply through your nose</li>
+                <li>Constrict the back of your throat slightly</li>
+                <li>Exhale slowly through your nose with the throat constriction</li>
+                <li>You should hear an ocean-like sound</li>
+                <li>Continue for 1-5 minutes</li>
+              </ol>
+              <p class="mt-2"><strong>Benefits:</strong> Calms the mind, warms the body, improves concentration</p>
+            </div>
+            
+            <h5>🌿 Alternate Nostril Breathing (Nadi Shodhana)</h5>
+            <p>Balances both hemispheres of the brain:</p>
+            <div class="technique-box">
+              <ol>
+                <li>Place right thumb over right nostril</li>
+                <li>Inhale through left nostril for 4 counts</li>
+                <li>Close left nostril with ring finger</li>
+                <li>Release right nostril, exhale for 4 counts</li>
+                <li>Inhale through right nostril for 4 counts</li>
+                <li>Close right nostril, exhale through left for 4 counts</li>
+                <li>Repeat 5-10 cycles</li>
+              </ol>
+              <p class="mt-2"><strong>Benefits:</strong> Balances energy, reduces anxiety, improves focus</li>
+            </div>
+            
+            <h5>🔥 Bellows Breath (Bhastrika)</h5>
+            <p>Energizing breath for when you're feeling sluggish:</p>
+            <div class="technique-box">
+              <ol>
+                <li>Sit up straight with relaxed shoulders</li>
+                <li>Take a deep inhale through your nose</li>
+                <li>Exhale forcefully through your nose</li>
+                <li>Continue rapid inhales and exhales (1 per second)</li>
+                <li>Do 10 breaths, then breathe normally</li>
+                <li>Repeat 3 rounds with rest between</li>
+              </ol>
+              <p class="mt-2"><strong>Benefits:</strong> Increases energy, clears the mind, warms the body</p>
+            </div>
+            
+            <h5>💎 When to Use Which Technique</h5>
+            <ul>
+              <li><strong>For Sleep:</strong> 4-7-8 Breathing</li>
+              <li><strong>For Anxiety:</strong> Box Breathing or Ocean Breath</li>
+              <li><strong>For Focus:</strong> Alternate Nostril Breathing</li>
+              <li><strong>For Energy:</strong> Bellows Breath</li>
+              <li><strong>For General Calm:</strong> Any technique for 2-5 minutes</li>
+            </ul>
+            
+            <div class="tip-box">
+              <h6>💡 Breathing Practice Tips</h6>
+              <ul>
+                <li>Start with just 1-2 minutes daily</li>
+                <li>Practice when calm to build the skill</li>
+                <li>Use a timer initially</li>
+                <li>Don't force it - gentle breathing is best</li>
+                <li>Notice how you feel before and after</li>
+              </ul>
+            </div>
+            
+            <p class="mt-4"><strong>Remember:</strong> Your breath is always with you as a tool for calm. Even one minute of conscious breathing can shift your nervous system from stress to relaxation.</p>
+          </div>
+        `
+      },
+      
+      // Toolkit resources
+      'grounding-techniques': {
+        title: 'Grounding Techniques for PTSD',
+        category: 'ptsd',
+        duration: '10 min',
+        content: `
+          <div class="resource-content">
+            <h4>🌍 Grounding Techniques for PTSD</h4>
+            <p class="lead">Immediate tools to help you stay present and connected during triggering moments.</p>
+            <!-- Content similar to other resources -->
+          </div>
+        `
+      },
+      'safety-planning': {
+        title: 'Safety Planning Guide',
+        category: 'ptsd',
+        duration: '15 min',
+        content: `
+          <div class="resource-content">
+            <h4>🛡️ Safety Planning Guide</h4>
+            <p class="lead">Create a personalized safety plan for difficult moments.</p>
+            <!-- Content similar to other resources -->
+          </div>
+        `
+      },
+      'sleep-hygiene': {
+        title: 'Sleep Hygiene for PTSD',
+        category: 'ptsd',
+        duration: '12 min',
+        content: `
+          <div class="resource-content">
+            <h4>😴 Sleep Hygiene for PTSD</h4>
+            <p class="lead">Improve sleep quality and reduce nightmares.</p>
+            <!-- Content similar to other resources -->
+          </div>
+        `
+      }
+    };
+    
+    let bookmarks = JSON.parse(localStorage.getItem('resourceBookmarks') || '{}');
+    let readingProgress = JSON.parse(localStorage.getItem('readingProgress') || '{}');
+    
+    // Update reading progress bar
+    function updateReadingProgress() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('readingProgress').style.width = scrolled + '%';
+    }
+    
+    // Filter resources
+    function filterResources() {
+      const searchTerm = document.getElementById('resourceSearch').value.toLowerCase();
+      const resources = document.querySelectorAll('[data-category]');
+      let visibleCount = 0;
+      
+      resources.forEach(resource => {
+        const title = resource.querySelector('h5').textContent.toLowerCase();
+        const description = resource.querySelector('p').textContent.toLowerCase();
+        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+        
+        if (matchesSearch) {
+          resource.style.display = 'block';
+          visibleCount++;
+        } else {
+          resource.style.display = 'none';
+        }
+      });
+      
+      document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+    
+    function filterByCategory(category) {
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      const resources = document.querySelectorAll('[data-category]');
+      let visibleCount = 0;
+      
+      resources.forEach(resource => {
+        if (category === 'all' || resource.getAttribute('data-category').includes(category)) {
+          resource.style.display = 'block';
+          visibleCount++;
+        } else {
+          resource.style.display = 'none';
+        }
+      });
+      
+      document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+    
+    // Bookmark functionality
+    function toggleBookmark(event, resourceId) {
+      event.stopPropagation(); // Prevent card click
+      
+      const btn = event.target.closest('.bookmark-btn');
+      const icon = btn.querySelector('i');
+      
+      if (bookmarks[resourceId]) {
+        delete bookmarks[resourceId];
+        btn.classList.remove('bookmarked');
+        icon.className = 'bi bi-bookmark';
+      } else {
+        bookmarks[resourceId] = true;
+        btn.classList.add('bookmarked');
+        icon.className = 'bi bi-bookmark-fill';
+      }
+      
+      localStorage.setItem('resourceBookmarks', JSON.stringify(bookmarks));
+      updateBookmarksList();
+      updateStatistics();
+    }
+    
+    function updateBookmarksList() {
+      const list = document.getElementById('bookmarksList');
+      const bookmarkCount = Object.keys(bookmarks).length;
+      
+      if (bookmarkCount === 0) {
+        list.innerHTML = '<div class="text-muted">No bookmarks yet</div>';
+      } else {
+        let html = '';
+        Object.keys(bookmarks).forEach(resourceId => {
+          const resource = resources[resourceId];
+          if (resource) {
+            html += `<div class="mb-2"><i class="bi bi-bookmark-fill text-primary me-2"></i>${resource.title}</div>`;
+          }
+        });
+        list.innerHTML = html;
+      }
+    }
+    
+    // Open resource detail - FIXED FOR ALL RESOURCES
+    function openResourceDetail(resourceId) {
+      const resource = resources[resourceId];
+      if (!resource) {
+        console.error('Resource not found:', resourceId);
+        return;
+      }
+      
+      // Update reading progress
+      if (!readingProgress[resourceId]) {
+        readingProgress[resourceId] = 0;
+      }
+      readingProgress[resourceId] = Math.min(readingProgress[resourceId] + 10, 100);
+      localStorage.setItem('readingProgress', JSON.stringify(readingProgress));
+      
+      // Update UI progress indicator
+      const progressRing = document.querySelector(`[onclick*="${resourceId}"] .progress-ring-circle`);
+      if (progressRing) {
+        progressRing.style.strokeDasharray = `${readingProgress[resourceId]}, 100`;
+      }
+      
+      // Show modal with complete resource content
+      document.getElementById('resourceModalTitle').textContent = resource.title;
+      document.getElementById('resourceModalBody').innerHTML = resource.content;
+      
+      const modal = new bootstrap.Modal(document.getElementById('resourceModal'));
+      modal.show();
+      
+      updateStatistics();
+    }
+    
+    function showResourceModal() {
+      const modal = new bootstrap.Modal(document.getElementById('addResourceModal'));
+      modal.show();
+    }
+    
+    function submitResourceSuggestion() {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('addResourceModal'));
+      modal.hide();
+      
+      // Show success message
+      showToast('Resource suggestion submitted successfully!', 'success');
+    }
+    
+    function showToast(message, type = 'info') {
+      const toastHtml = `
+        <div class="toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3" 
+             role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              <i class="bi ${type === 'success' ? 'bi-check-circle' : type === 'error' ? 'bi-exclamation-triangle' : 'bi-info-circle'} me-2"></i>
+              ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 mt-2" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', toastHtml);
+      const toastEl = document.querySelector('.toast:last-child');
+      const bsToast = new bootstrap.Toast(toastEl);
+      bsToast.show();
+      
+      toastEl.addEventListener('hidden.bs.toast', function() {
+        this.remove();
+      });
+    }
+    
+    function updateStatistics() {
+      const total = document.querySelectorAll('[data-category]').length;
+      const completed = Object.values(readingProgress).filter(p => p >= 100).length;
+      const bookmarked = Object.keys(bookmarks).length;
+      
+      document.getElementById('totalResources').textContent = total;
+      document.getElementById('completedResources').textContent = completed;
+      document.getElementById('bookmarkedResources').textContent = bookmarked;
+      
+      // Calculate time spent (mock calculation)
+      const timeSpent = Math.floor(Object.values(readingProgress).reduce((a, b) => a + b, 0) / 10) * 5;
+      const hours = Math.floor(timeSpent / 60);
+      const minutes = timeSpent % 60;
+      document.getElementById('timeSpent').textContent = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Update bookmarks UI
+      Object.keys(bookmarks).forEach(resourceId => {
+        const btn = document.querySelector(`[onclick*="${resourceId}"] .bookmark-btn`);
+        if (btn) {
+          btn.classList.add('bookmarked');
+          btn.querySelector('i').className = 'bi bi-bookmark-fill';
+        }
+      });
+      
+      // Update reading progress UI for all resources
+      Object.keys(resources).forEach(resourceId => {
+        if (readingProgress[resourceId]) {
+          const progressRing = document.querySelector(`[onclick*="${resourceId}"] .progress-ring-circle`);
+          if (progressRing) {
+            progressRing.style.strokeDasharray = `${readingProgress[resourceId]}, 100`;
+          }
+        }
+      });
+      
+      updateBookmarksList();
+      updateStatistics();
+      
+      // Scroll event for progress bar
+      window.onscroll = updateReadingProgress;
+      
+      // Check URL hash for anchor links
+      if (window.location.hash) {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }, 500);
+        }
+      }
+    });
+  </script>
 </body>
 </html>

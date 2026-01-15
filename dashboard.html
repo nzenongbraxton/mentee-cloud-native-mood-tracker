@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>MindEase Dashboard</title>
+		<title>MindEase Dashboard | Mental Wellness</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 		<link
@@ -14,136 +14,1015 @@
 		/>
 
 		<style>
+			/* ... (existing CSS remains the same) ... */
 			body {
-				background: #f6f9fc;
-			}
-			.sidebar {
-				width: 250px;
+				background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				margin: 0;
+				padding: 0;
 				min-height: 100vh;
-				background: #fff;
-				border-right: 1px solid #ddd;
 			}
-			.chat-box {
-				background: #e9f2ff;
+			
+			.sidebar {
+				width: 280px;
+				height: 100vh;
+				background: rgba(255, 255, 255, 0.98);
+				backdrop-filter: blur(10px);
+				border-right: 1px solid rgba(221, 221, 221, 0.5);
+				box-shadow: 3px 0 20px rgba(0,0,0,0.08);
+				position: fixed;
+				left: 0;
+				top: 0;
+				overflow-y: auto;
+			}
+			
+			.main-content {
+				margin-left: 280px;
+				padding: 0;
+				width: calc(100% - 280px);
+				min-height: 100vh;
+			}
+			
+			.greeting-card {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
 				border-radius: 20px;
+				padding: 2rem;
+				margin-bottom: 2rem;
+				box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+				animation: slideIn 0.5s ease;
+			}
+			
+			@keyframes slideIn {
+				from { opacity: 0; transform: translateY(-20px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+			
+			.mood-tracker {
+				background: white;
+				border-radius: 20px;
+				padding: 1.5rem;
+				margin-bottom: 2rem;
+				box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+			}
+			
+			.mood-btn {
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				font-size: 1.5rem;
+				border: 3px solid transparent;
+				transition: all 0.3s;
+			}
+			
+			.mood-btn:hover {
+				transform: scale(1.1) translateY(-5px);
+				box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+			}
+			
+			.mood-btn.selected {
+				border-color: #667eea;
+				box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+			}
+			
+			.progress-card {
+				background: white;
+				border-radius: 20px;
+				padding: 1.5rem;
+				margin-bottom: 1.5rem;
+				box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+				transition: transform 0.3s;
+			}
+			
+			.progress-card:hover {
+				transform: translateY(-5px);
+			}
+			
+			.chat-box {
+				background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+				border-radius: 20px;
+				height: 500px;
+				box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+				display: flex;
+				flex-direction: column;
+			}
+			
+			.chat-messages {
+				flex-grow: 1;
+				overflow-y: auto;
+				padding: 1rem;
+			}
+			
+			.resource-card {
+				border: none;
+				border-radius: 15px;
+				transition: all 0.3s;
+				cursor: pointer;
+				overflow: hidden;
+			}
+			
+			.resource-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+			}
+			
+			.resource-icon {
+				width: 50px;
+				height: 50px;
+				border-radius: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.5rem;
+			}
+			
+			.daily-tip {
+				background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+				border-radius: 15px;
+				padding: 1.5rem;
+				margin-top: 1rem;
+				animation: pulse 2s infinite;
+			}
+			
+			@keyframes pulse {
+				0% { box-shadow: 0 0 0 0 rgba(168, 237, 234, 0.7); }
+				70% { box-shadow: 0 0 0 10px rgba(168, 237, 234, 0); }
+				100% { box-shadow: 0 0 0 0 rgba(168, 237, 234, 0); }
+			}
+			
+			.stats-card {
+				background: white;
+				border-radius: 15px;
+				padding: 1.2rem;
+				text-align: center;
+				box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+			}
+			
+			.stats-number {
+				font-size: 2rem;
+				font-weight: bold;
+				color: #667eea;
+			}
+			
+			/* Logout Button Styles */
+			.logout-btn-sidebar {
+				background: transparent;
+				color: #dc3545;
+				border: 2px solid #dc3545;
+				border-radius: 12px;
+				padding: 0.75rem;
+				font-weight: 600;
+				transition: all 0.3s;
+				width: 100%;
+				margin-top: 1rem;
+			}
+			
+			.logout-btn-sidebar:hover {
+				background: #dc3545;
+				color: white;
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+			}
+			
+			.logout-btn {
+				background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+				color: white;
+				border: none;
+				border-radius: 12px;
+				padding: 0.875rem;
+				font-weight: 600;
+				letter-spacing: 0.5px;
+				transition: all 0.3s;
+				width: 100%;
+				margin-top: 1rem;
+			}
+			
+			.logout-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+				background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+			}
+			
+			.sidebar-content {
+				padding: 1.5rem;
+				display: flex;
+				flex-direction: column;
 				height: 100%;
+			}
+			
+			.sidebar-nav {
+				flex: 1;
+			}
+			
+			.sidebar-footer {
+				margin-top: auto;
+				padding-top: 1.5rem;
+				border-top: 1px solid rgba(221, 221, 221, 0.5);
+			}
+			
+			.user-info-card {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border-radius: 15px;
+				padding: 1rem;
+				margin-bottom: 1.5rem;
+			}
+			
+			@media (max-width: 992px) {
+				.sidebar {
+					width: 100%;
+					height: auto;
+					position: relative;
+				}
+				
+				.main-content {
+					margin-left: 0;
+					width: 100%;
+				}
 			}
 		</style>
 	</head>
 
 	<body>
-		<div class="d-flex">
-			<!-- SIDEBAR -->
-			<div class="sidebar p-4">
-				<h4 class="fw-bold mb-4 text-primary">💙 MindEase</h4>
+		<!-- FIXED SIDEBAR -->
+		<div class="sidebar">
+			<div class="sidebar-content">
+				<div class="sidebar-nav">
+					<div class="d-flex align-items-center mb-4">
+						<div class="rounded-circle bg-primary p-2 me-3 shadow">
+							<i class="bi bi-heart-pulse text-white fs-4"></i>
+						</div>
+						<h4 class="fw-bold mb-0 text-primary">💙 MindEase</h4>
+					</div>
 
-				<ul class="nav flex-column">
-					<li class="nav-item mb-3">
-						<a class="nav-link fw-bold text-primary" href="dashboard.html"
-							><i class="bi bi-grid"></i> Dashboard</a
-						>
-					</li>
-					<li class="nav-item mb-3">
-						<a class="nav-link text-dark" href="chat.html"
-							><i class="bi bi-chat-dots"></i> Chat</a
-						>
-					</li>
-					<li class="nav-item mb-3">
-						<a class="nav-link text-dark" href="resources.html"
-							><i class="bi bi-book"></i> Resources</a
-						>
-					</li>
-					<li class="nav-item mb-3">
-						<a class="nav-link text-dark" href="profile.html"
-							><i class="bi bi-person"></i> Profile</a
-						>
-					</li>
-				</ul>
+					<!-- User Info Card -->
+					<div class="user-info-card">
+						<div class="d-flex align-items-center">
+							<i class="bi bi-person-circle fs-3 me-3"></i>
+							<div>
+								<strong id="sidebarUserName">John Doe</strong><br>
+								<small class="opacity-75" id="sidebarUserEmail">user@example.com</small>
+							</div>
+						</div>
+					</div>
+
+					<ul class="nav flex-column">
+						<li class="nav-item mb-3">
+							<a class="nav-link fw-bold text-primary d-flex align-items-center" href="dashboard.html">
+								<i class="bi bi-grid-1x2-fill me-3"></i> Dashboard
+							</a>
+						</li>
+						<li class="nav-item mb-3">
+							<a class="nav-link text-dark d-flex align-items-center" href="chat.html">
+								<i class="bi bi-chat-dots me-3"></i> Chat
+							</a>
+						</li>
+						<li class="nav-item mb-3">
+							<a class="nav-link text-dark d-flex align-items-center" href="resources.html">
+								<i class="bi bi-journal-bookmark me-3"></i> Resources
+							</a>
+						</li>
+						<li class="nav-item mb-3">
+							<a class="nav-link text-dark d-flex align-items-center" href="profile.html">
+								<i class="bi bi-person me-3"></i> Profile
+							</a>
+						</li>
+					</ul>
+					
+					<!-- Moved Logout Button Higher - Right Below Navigation -->
+					<div class="mt-4 pt-3 border-top">
+						<button class="btn logout-btn-sidebar" onclick="logoutUser()">
+							<i class="bi bi-box-arrow-right me-2"></i> Logout
+						</button>
+					</div>
+					
+					<div class="mt-4 pt-4 border-top">
+						<h6 class="fw-bold mb-3">Quick Actions</h6>
+						<button class="btn btn-outline-primary w-100 mb-2" onclick="location.href='chat.html'">
+							<i class="bi bi-plus-circle me-2"></i> New Chat
+						</button>
+						<button class="btn btn-outline-success w-100" onclick="showBreathingExercise()">
+							<i class="bi bi-wind me-2"></i> Breathing Exercise
+						</button>
+					</div>
+				</div>
 			</div>
+		</div>
 
-			<!-- MAIN CONTENT -->
+		<!-- MAIN CONTENT AREA -->
+		<div class="main-content">
 			<div class="container-fluid p-4">
-				<!-- TOP BAR -->
+				<!-- TOP BAR - UPDATED: Removed notification icon -->
 				<div class="d-flex justify-content-between align-items-center mb-4">
-					<h3>Dashboard</h3>
+					<div>
+						<h3 class="fw-bold text-dark mb-0">Dashboard</h3>
+						<small class="text-muted">Your mental wellness overview</small>
+					</div>
 					<div class="d-flex align-items-center">
-						<i class="bi bi-person-circle fs-4 me-2"></i>
-						<strong>John Doe</strong>
+						<!-- Removed notification icon -->
+						<div class="dropdown">
+							<button class="btn btn-light d-flex align-items-center" type="button" 
+									data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="bi bi-person-circle fs-4 me-2 text-primary"></i>
+								<div class="text-start">
+									<strong id="userName">John Doe</strong><br>
+									<!-- UPDATED: Changed "Premium User" to "User" -->
+									<small class="text-muted" id="userStatus">User</small>
+								</div>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-end">
+								<li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i> Profile</a></li>
+								<li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Settings</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 
 				<div class="row">
-					<!-- CENTER CONTENT -->
-					<div class="col-md-7">
-						<h2 class="fw-bold">Welcome to MindEase</h2>
-						<p class="text-muted">How are you feeling today?</p>
-
-						<div class="mb-4">
-							<button class="btn btn-light me-2" onclick="moodResponse('sad')">
-								Sad
-							</button>
-							<button
-								class="btn btn-light me-2"
-								onclick="moodResponse('stressed')"
-							>
-								Stressed
-							</button>
-							<button
-								class="btn btn-light me-2"
-								onclick="moodResponse('anxious')"
-							>
-								Anxious
-							</button>
-							<button class="btn btn-light" onclick="moodResponse('other')">
-								Other
-							</button>
-						</div>
-						<div
-							class="alert alert-primary mt-3"
-							id="moodMessage"
-							style="display: none"
-						></div>
-
-						<h5 class="fw-bold mb-3">Resources</h5>
-
-						<div class="card mb-3 shadow-sm">
-							<div class="card-body d-flex align-items-center">
-								<i class="bi bi-emoji-smile fs-3 me-3 text-primary"></i>
-								<strong>Coping with PTSD</strong>
+					<!-- LEFT COLUMN -->
+					<div class="col-lg-8">
+						<!-- GREETING CARD -->
+						<div class="greeting-card">
+							<div class="d-flex justify-content-between align-items-start">
+								<div>
+									<h2 class="fw-bold" id="greetingText">Good morning, John! 🌅</h2>
+									<p class="opacity-75">"Every day is a new beginning. Take a deep breath and start again."</p>
+								</div>
+								<div class="text-end">
+									<div class="badge bg-light text-primary p-2 mb-2">Daily Check-in</div>
+									<h5 id="currentTime">8:30 AM</h5>
+									<small id="currentDate">Monday, December 9, 2024</small>
+								</div>
+							</div>
+							
+							<!-- Logout Button in Greeting Card -->
+							<div class="d-flex justify-content-end mt-3">
+								<button class="btn btn-sm btn-outline-light" onclick="logoutUser()">
+									<i class="bi bi-box-arrow-right me-1"></i> Logout
+								</button>
 							</div>
 						</div>
-
-						<div class="card mb-3 shadow-sm">
-							<div class="card-body d-flex align-items-center">
-								<i class="bi bi-lightning fs-3 me-3 text-primary"></i>
-								<strong>Managing Stress</strong>
+						
+						<!-- MOOD TRACKER -->
+						<div class="mood-tracker">
+							<h5 class="fw-bold mb-4">How are you feeling today?</h5>
+							<div class="row g-3 mb-4">
+								<div class="col text-center">
+									<button class="mood-btn btn btn-outline-primary" onclick="trackMood('happy', '😊')">
+										😊
+									</button>
+									<div class="mt-2">Happy</div>
+								</div>
+								<div class="col text-center">
+									<button class="mood-btn btn btn-outline-info" onclick="trackMood('calm', '😌')">
+										😌
+									</button>
+									<div class="mt-2">Calm</div>
+								</div>
+								<div class="col text-center">
+									<button class="mood-btn btn btn-outline-warning" onclick="trackMood('anxious', '😰')">
+										😰
+									</button>
+									<div class="mt-2">Anxious</div>
+								</div>
+								<div class="col text-center">
+									<button class="mood-btn btn btn-outline-secondary" onclick="trackMood('tired', '😴')">
+										😴
+									</button>
+									<div class="mt-2">Tired</div>
+								</div>
+								<div class="col text-center">
+									<button class="mood-btn btn btn-outline-danger" onclick="trackMood('stressed', '😫')">
+										😫
+									</button>
+									<div class="mt-2">Stressed</div>
+								</div>
 							</div>
+							
+							<div class="alert alert-info" id="moodMessage" style="display: none"></div>
+							
+							<div class="row g-3">
+								<div class="col-md-6">
+									<label class="form-label">Mood Intensity</label>
+									<input type="range" class="form-range" id="moodIntensity" min="1" max="10" value="5">
+									<div class="d-flex justify-content-between">
+										<small>Low</small>
+										<small>Medium</small>
+										<small>High</small>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Add Note</label>
+									<textarea class="form-control" id="moodNote" rows="2" placeholder="How are you really feeling?"></textarea>
+								</div>
+							</div>
+						</div>
+						
+						<!-- ACTIVITY TRACKING - UPDATED SECTION -->
+						<div class="row mb-4">
+							<div class="col-md-4">
+								<div class="stats-card">
+									<div class="stats-number" id="moodEntries">0</div>
+									<small>Mood Entries</small>
+									<div class="progress mt-2" style="height: 5px;">
+										<div class="progress-bar bg-success" style="width: 0%" id="moodProgress"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="stats-card">
+									<div class="stats-number" id="chatCount">0</div>
+									<small>Chat Messages</small>
+									<div class="progress mt-2" style="height: 5px;">
+										<div class="progress-bar bg-info" style="width: 0%" id="chatProgress"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="stats-card">
+									<div class="stats-number" id="resourceCount">0</div>
+									<small>Resources Viewed</small>
+									<div class="progress mt-2" style="height: 5px;">
+										<div class="progress-bar bg-warning" style="width: 0%" id="resourceProgress"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- RESOURCES -->
+						<h5 class="fw-bold mb-3">Recommended Resources</h5>
+						<div class="row g-3 mb-4">
+							<div class="col-md-6">
+								<div class="resource-card card shadow-sm" onclick="openResource('ptsd')">
+									<div class="card-body">
+										<div class="d-flex align-items-center mb-3">
+											<div class="resource-icon bg-primary bg-opacity-10 text-primary me-3">
+												<i class="bi bi-emoji-smile"></i>
+											</div>
+											<div>
+												<strong>Coping with PTSD</strong><br>
+												<small class="text-muted">Grounding techniques & strategies</small>
+											</div>
+										</div>
+										<p class="text-muted small">Learn effective techniques to manage PTSD symptoms and regain control of your life.</p>
+										<div class="d-flex justify-content-between align-items-center">
+											<small><i class="bi bi-clock me-1"></i> 15 min read</small>
+											<span class="badge bg-primary">New</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-md-6">
+								<div class="resource-card card shadow-sm" onclick="openResource('stress')">
+									<div class="card-body">
+										<div class="d-flex align-items-center mb-3">
+											<div class="resource-icon bg-warning bg-opacity-10 text-warning me-3">
+												<i class="bi bi-lightning-charge"></i>
+											</div>
+											<div>
+												<strong>Managing Stress</strong><br>
+												<small class="text-muted">Daily stress management exercises</small>
+											</div>
+										</div>
+										<p class="text-muted small">Practical exercises to reduce stress and improve your daily resilience.</p>
+										<div class="d-flex justify-content-between align-items-center">
+											<small><i class="bi bi-clock me-1"></i> 20 min read</small>
+											<span class="badge bg-success">Popular</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Logout Button Section -->
+						<div class="progress-card text-center">
+							<h6 class="fw-bold mb-3">Account Management</h6>
+							<p class="text-muted mb-4">Need to sign out? You can log back in anytime with your credentials.</p>
+							<button class="btn logout-btn" onclick="logoutUser()">
+								<i class="bi bi-box-arrow-right me-2"></i> Logout from MindEase
+							</button>
+						</div>
+						
+						<!-- DAILY TIP -->
+						<div class="daily-tip">
+							<h6><i class="bi bi-lightbulb me-2"></i> Daily Wellness Tip</h6>
+							<p id="dailyTip">Practice the 4-7-8 breathing technique: inhale for 4 seconds, hold for 7 seconds, exhale for 8 seconds. Repeat 4 times.</p>
 						</div>
 					</div>
 
-					<!-- CHAT PANEL -->
-					<div class="col-md-5">
-						<div class="chat-box p-4 shadow">
-							<p class="bg-white p-3 rounded">
-								Hello! How are you feeling today?
-							</p>
-
-							<div class="input-group mt-4">
-								<input
-									type="text"
-									class="form-control"
-									placeholder="Type your message..."
-								/>
-								<button class="btn btn-primary">
+					<!-- RIGHT COLUMN -->
+					<div class="col-lg-4">
+						<!-- CHAT PANEL -->
+						<div class="chat-box p-4">
+							<div class="d-flex align-items-center mb-3">
+								<div class="rounded-circle bg-primary p-2 me-2">
+									<i class="bi bi-robot text-white"></i>
+								</div>
+								<div>
+									<h6 class="mb-0">Quick Chat</h6>
+									<small class="text-muted">AI Therapist is online</small>
+								</div>
+							</div>
+							
+							<div class="chat-messages" id="dashboardChat">
+								<div class="alert alert-light border">
+									<small class="text-muted">Today, 9:15 AM</small>
+									<p class="mb-0">Hello! How are you feeling today?</p>
+								</div>
+							</div>
+							
+							<div class="input-group mt-3">
+								<input type="text" class="form-control form-control-sm" 
+									   id="dashboardMessage" placeholder="Type your message...">
+								<button class="btn btn-primary btn-sm" onclick="sendDashboardMessage()">
 									<i class="bi bi-send"></i>
 								</button>
 							</div>
+							
+							<div class="mt-3">
+								<small class="text-muted">Quick replies:</small>
+								<div class="d-flex flex-wrap gap-1 mt-1">
+									<button class="btn btn-outline-primary btn-sm" onclick="quickDashboardMessage('I need to talk')">
+										I need to talk
+									</button>
+									<button class="btn btn-outline-primary btn-sm" onclick="quickDashboardMessage('Feeling anxious')">
+										Feeling anxious
+									</button>
+								</div>
+							</div>
+						</div>
+						
+						<!-- REMOVED: UPCOMING SESSIONS SECTION -->
+						
+						<!-- Session Info -->
+						<div class="progress-card mt-4">
+							<h6 class="fw-bold mb-3">Session Info</h6>
+							<p class="small text-muted mb-2">
+								<i class="bi bi-info-circle me-1 text-primary"></i>
+								Logged in as: <span id="currentUserEmail">user@example.com</span>
+							</p>
+							<p class="small text-muted mb-3">
+								<i class="bi bi-clock me-1 text-primary"></i>
+								Session started: <span id="sessionStartTime">Today, 8:30 AM</span>
+							</p>
+							<button class="btn btn-outline-danger btn-sm w-100" onclick="logoutUser()">
+								<i class="bi bi-box-arrow-right me-1"></i> End Session
+							</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<script src="js/app.js"></script>
+		<!-- Breathing Exercise Modal -->
+		<div class="modal fade" id="breathingModal" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Breathing Exercise</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-center">
+						<div class="breathing-circle mb-4 mx-auto" id="breathingCircle" 
+							 style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, #a8edea, #fed6e3); display: flex; align-items: center; justify-content: center;">
+							<h2 id="breathingText" class="text-dark">Breathe In</h2>
+						</div>
+						<p class="mb-3">Follow the circle's animation and breathe along</p>
+						<div class="progress mb-3" style="height: 10px;">
+							<div class="progress-bar bg-info" id="breathingProgress" style="width: 0%"></div>
+						</div>
+						<small class="text-muted">Cycle: <span id="cycleCount">1</span>/5</small>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" onclick="stopBreathing()">Stop</button>
+						<button class="btn btn-primary" onclick="startBreathing()">Start</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+		
+		<script>
+			// Update time and date
+			function updateDateTime() {
+				const now = new Date();
+				const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+				const dateStr = now.toLocaleDateString('en-US', { 
+					weekday: 'long', 
+					year: 'numeric', 
+					month: 'long', 
+					day: 'numeric' 
+				});
+				
+				document.getElementById('currentTime').textContent = timeStr;
+				document.getElementById('currentDate').textContent = dateStr;
+			}
+			
+			// COMPLETE LOGOUT FUNCTION
+			function logoutUser() {
+				// Show confirmation dialog
+				if (confirm("Are you sure you want to logout?")) {
+					// Show loading state on all logout buttons
+					const logoutButtons = document.querySelectorAll('[onclick*="logoutUser"]');
+					logoutButtons.forEach(btn => {
+						const originalText = btn.innerHTML;
+						btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Logging out...';
+						btn.disabled = true;
+					});
+					
+					// Clear all user session data
+					setTimeout(() => {
+						// Clear ALL user session data
+						localStorage.removeItem('current_user');
+						localStorage.removeItem('isLoggedIn');
+						localStorage.removeItem('isAnonymous');
+						localStorage.removeItem('anonymousId');
+						localStorage.removeItem('userEmail');
+						localStorage.removeItem('todayMood');
+						localStorage.removeItem('currentMood');
+						localStorage.removeItem('lastLogin');
+						
+						// Show success message using toast
+						showToast('Successfully logged out. Redirecting to registration page...', 'success');
+						
+						// Redirect to registration page after delay
+						setTimeout(() => {
+							window.location.href = 'index.html';
+						}, 1500);
+					}, 1000);
+				}
+			}
+			
+			// Toast notification function
+			function showToast(message, type = 'info') {
+				// Remove any existing toasts
+				document.querySelectorAll('.toast').forEach(toast => toast.remove());
+				
+				const toastHtml = `
+					<div class="toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} border-0 position-fixed bottom-0 end-0 m-3" 
+						 role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+						<div class="d-flex">
+							<div class="toast-body">
+								<i class="bi ${type === 'success' ? 'bi-check-circle' : type === 'error' ? 'bi-exclamation-triangle' : type === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle'} me-2"></i>
+								${message}
+							</div>
+							<button type="button" class="btn-close btn-close-white me-2 mt-2" data-bs-dismiss="toast"></button>
+						</div>
+					</div>
+				`;
+				
+				document.body.insertAdjacentHTML('beforeend', toastHtml);
+				const toastEl = document.querySelector('.toast:last-child');
+				const toast = new bootstrap.Toast(toastEl);
+				toast.show();
+				
+				toastEl.addEventListener('hidden.bs.toast', function() {
+					this.remove();
+				});
+			}
+			
+			// Function to initialize user activity tracking
+			function initializeActivityTracking() {
+				// Get or initialize activity counts
+				let activityData = JSON.parse(localStorage.getItem('userActivity')) || {
+					moodEntries: 0,
+					chatMessages: 0,
+					resourcesViewed: 0,
+					lastReset: new Date().toDateString()
+				};
+				
+				// Check if we need to reset for a new day
+				const today = new Date().toDateString();
+				if (activityData.lastReset !== today) {
+					activityData = {
+						moodEntries: 0,
+						chatMessages: 0,
+						resourcesViewed: 0,
+						lastReset: today
+					};
+				}
+				
+				localStorage.setItem('userActivity', JSON.stringify(activityData));
+				return activityData;
+			}
+			
+			// Function to update activity counts
+			function updateActivityCount(type, increment = 1) {
+				let activityData = JSON.parse(localStorage.getItem('userActivity')) || initializeActivityTracking();
+				
+				if (type === 'mood') {
+					activityData.moodEntries += increment;
+				} else if (type === 'chat') {
+					activityData.chatMessages += increment;
+				} else if (type === 'resource') {
+					activityData.resourcesViewed += increment;
+				}
+				
+				localStorage.setItem('userActivity', JSON.stringify(activityData));
+				updateActivityDisplay();
+				return activityData[type + (type === 'chat' ? 'Messages' : type === 'mood' ? 'Entries' : 'Viewed')];
+			}
+			
+			// Function to update activity display
+			function updateActivityDisplay() {
+				const activityData = JSON.parse(localStorage.getItem('userActivity')) || initializeActivityTracking();
+				
+				// Update counts
+				document.getElementById('moodEntries').textContent = activityData.moodEntries;
+				document.getElementById('chatCount').textContent = activityData.chatMessages;
+				document.getElementById('resourceCount').textContent = activityData.resourcesViewed;
+				
+				// Update progress bars (scaled to reasonable limits)
+				const moodProgress = Math.min(activityData.moodEntries * 25, 100); // 4 entries = 100%
+				const chatProgress = Math.min(activityData.chatMessages * 10, 100); // 10 messages = 100%
+				const resourceProgress = Math.min(activityData.resourcesViewed * 20, 100); // 5 resources = 100%
+				
+				document.getElementById('moodProgress').style.width = `${moodProgress}%`;
+				document.getElementById('chatProgress').style.width = `${chatProgress}%`;
+				document.getElementById('resourceProgress').style.width = `${resourceProgress}%`;
+			}
+			
+			// Mood tracking
+			let selectedMood = null;
+			
+			function trackMood(mood, emoji) {
+				// Remove selected class from all buttons
+				document.querySelectorAll('.mood-btn').forEach(btn => {
+					btn.classList.remove('selected');
+					btn.classList.add('btn-outline-primary', 'btn-outline-info', 'btn-outline-warning', 
+									'btn-outline-secondary', 'btn-outline-danger');
+				});
+				
+				// Add selected class to clicked button
+				event.target.classList.add('selected');
+				selectedMood = mood;
+				
+				const intensity = document.getElementById('moodIntensity').value;
+				const note = document.getElementById('moodNote').value;
+				
+				// Save to localStorage
+				const moodData = {
+					mood,
+					emoji,
+					intensity,
+					note,
+					timestamp: new Date().toISOString()
+				};
+				
+				localStorage.setItem('todayMood', JSON.stringify(moodData));
+				localStorage.setItem('currentMood', emoji + ' ' + mood.charAt(0).toUpperCase() + mood.slice(1));
+				
+				// Update mood entries count
+				updateActivityCount('mood');
+				
+				const messages = {
+					happy: "That's wonderful! Keep spreading that positive energy! 🌟",
+					calm: "Peace and tranquility - that's a great state to be in. 🧘",
+					anxious: "It's okay to feel anxious. Remember to breathe deeply. 💨",
+					tired: "Listen to your body and take care of yourself. Rest when needed. 💤",
+					stressed: "Stress is natural. Let's work on some calming techniques together. 🌿"
+				};
+				
+				const messageDiv = document.getElementById('moodMessage');
+				messageDiv.textContent = messages[mood];
+				messageDiv.className = `alert alert-${getMoodAlertClass(mood)}`;
+				messageDiv.style.display = 'block';
+				
+				// Show confirmation
+				setTimeout(() => {
+					messageDiv.innerHTML += '<div class="mt-2"><small>Mood logged successfully!</small></div>';
+				}, 1000);
+			}
+			
+			function getMoodAlertClass(mood) {
+				switch(mood) {
+					case 'happy': return 'success';
+					case 'calm': return 'info';
+					case 'anxious': return 'warning';
+					case 'tired': return 'secondary';
+					case 'stressed': return 'danger';
+					default: return 'primary';
+				}
+			}
+			
+			// Daily tips
+			const dailyTips = [
+				"Take 5 minutes to practice gratitude. Write down 3 things you're thankful for today.",
+				"Stay hydrated! Drinking water can improve mood and cognitive function.",
+				"Go for a 10-minute walk outside. Fresh air and movement work wonders.",
+				"Practice mindfulness while eating. Focus on the taste, texture, and aroma of your food.",
+				"Connect with a friend or loved one today. Social connections boost mental health."
+			];
+			
+			// Chat functionality for dashboard
+			function sendDashboardMessage() {
+				const input = document.getElementById('dashboardMessage');
+				const message = input.value.trim();
+				
+				if (message) {
+					addDashboardMessage(message, 'user');
+					input.value = '';
+					
+					// Update chat message count
+					updateActivityCount('chat');
+					
+					// Simulate AI response
+					setTimeout(() => {
+						const responses = [
+							"I'm here to listen. Tell me more.",
+							"Thank you for sharing. How can I support you?",
+							"I understand. Would you like to explore this further in a full chat session?"
+						];
+						const response = responses[Math.floor(Math.random() * responses.length)];
+						addDashboardMessage(response, 'ai');
+					}, 1000);
+				}
+			}
+			
+			function quickDashboardMessage(text) {
+				document.getElementById('dashboardMessage').value = text;
+				sendDashboardMessage();
+			}
+			
+			function addDashboardMessage(text, type) {
+				const chatDiv = document.getElementById('dashboardChat');
+				const messageDiv = document.createElement('div');
+				
+				messageDiv.className = `alert ${type === 'user' ? 'alert-primary' : 'alert-light'} border mb-2`;
+				messageDiv.innerHTML = `
+					<small class="text-muted">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+					<p class="mb-0">${text}</p>
+				`;
+				
+				chatDiv.appendChild(messageDiv);
+				chatDiv.scrollTop = chatDiv.scrollHeight;
+			}
+			
+			// Breathing exercise
+			let breathingInterval;
+			let cycle = 0;
+			
+			function showBreathingExercise() {
+				const modal = new bootstrap.Modal(document.getElementById('breathingModal'));
+				modal.show();
+			}
+			
+			function startBreathing() {
+				let step = 0;
+				const circle = document.getElementById('breathingCircle');
+				const text = document.getElementById('breathingText');
+				const progress = document.getElementById('breathingProgress');
+				const cycleElement = document.getElementById('cycleCount');
+				
+				breathingInterval = setInterval(() => {
+					step++;
+					
+					if (step <= 4) {
+						// Breathe in
+						text.textContent = 'Breathe In';
+						circle.style.transform = `scale(${1 + step * 0.1})`;
+						circle.style.backgroundColor = '#a8edea';
+					} else if (step <= 11) {
+						// Hold
+						text.textContent = 'Hold';
+						circle.style.backgroundColor = '#fed6e3';
+					} else if (step <= 19) {
+						// Breathe out
+						text.textContent = 'Breathe Out';
+						circle.style.transform = `scale(${1 + (19 - step) * 0.1})`;
+						circle.style.backgroundColor = '#c8c8ff';
+					}
+					
+					progress.style.width = `${(step / 19) * 100}%`;
+					
+					if (step >= 19) {
+						step = 0;
+						cycle++;
+						cycleElement.textContent = cycle + 1;
+						
+						if (cycle >= 5) {
+							stopBreathing();
+							text.textContent = 'Complete!';
+							circle.style.backgroundColor = '#d4edda';
+						}
+					}
+				}, 1000);
+			}
+			
+			function stopBreathing() {
+				clearInterval(breathingInterval);
+				document.getElementById('breathingText').textContent = 'Ready';
+				document.getElementById('breathingCircle').style.transform = 'scale(1)';
+				document.getElementById('breathingProgress').style.width = '0%';
+				cycle = 0;
+				document.getElementById('cycleCount').textContent = '1';
+			}
+			
+			// Resource navigation
+			function openResource(type) {
+				// Update resources viewed count
+				updateActivityCount('resource');
+				
+				if (type === 'ptsd') {
+					window.location.href = 'resources.html#ptsd';
+				} else if (type === 'stress') {
+					window.location.href = 'resources.html#stress';
+				}
+			}
+			
+			// Check if user is logged in on page load
+			document.addEventListener('DOMContentLoaded', function() {
+				updateDateTime();
+				setInterval(updateDateTime, 60000);
+				
+				// Initialize activity tracking
+				initializeActivityTracking();
+				updateActivityDisplay();
+				
+				// Check if user is logged in
+				const currentUser = localStorage.getItem('current_user');
+				const isLoggedIn = localStorage.getItem('isLoggedIn');
+				const isAnonymous = localStorage.getItem('isAnonymous');
+				
+				if (!currentUser && isLoggedIn !== 'true' && isAnonymous !== 'true') {
+					// Not logged in, redirect to registration page
+					window.location.href = 'index.html';
+					return;
+				}
+				
+				// Load user data if available
+				if (currentUser) {
+					try {
+						const userData = JSON.parse(currentUser);
+						if (userData.firstName) {
+							const userName = userData.firstName + ' ' + (userData.lastName || '');
+							document.getElementById('userName').textContent = userName;
+							document.getElementById('sidebarUserName').textContent = userName;
+							
+							// Set greeting based on time of day
+							const hour = new Date().getHours();
+							let greeting = '';
+							if (hour < 12) greeting = 'Good morning';
+							else if (hour < 18) greeting = 'Good afternoon';
+							else greeting = 'Good evening';
+							
+							document.getElementById('greetingText').textContent = `${greeting}, ${userData.firstName}! ${hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌙'}`;
+						}
+						if (userData.email) {
+							document.getElementById('currentUserEmail').textContent = userData.email;
+							document.getElementById('sidebarUserEmail').textContent = userData.email;
+						}
+						// Always set status to "User" regardless of anonymous status
+						document.getElementById('userStatus').textContent = 'User';
+					} catch (e) {
+						console.error('Error parsing user data:', e);
+					}
+				}
+				
+				// Load saved mood
+				const savedMood = localStorage.getItem('todayMood');
+				if (savedMood) {
+					try {
+						const moodData = JSON.parse(savedMood);
+						document.getElementById('moodIntensity').value = moodData.intensity;
+						document.getElementById('moodNote').value = moodData.note;
+						
+						// Update UI to show selected mood
+						const moodButtons = document.querySelectorAll('.mood-btn');
+						moodButtons.forEach(btn => {
+							if (btn.textContent.includes(moodData.emoji)) {
+								btn.classList.add('selected');
+							}
+						});
+					} catch (e) {
+						console.error('Error loading mood:', e);
+					}
+				}
+				
+				// Set random daily tip
+				const randomTip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+				document.getElementById('dailyTip').textContent = randomTip;
+				
+				// Set session start time
+				const sessionStart = localStorage.getItem('lastLogin') || new Date().toISOString();
+				const sessionDate = new Date(sessionStart);
+				const sessionTimeStr = sessionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+				const today = new Date().toDateString();
+				const sessionDay = sessionDate.toDateString();
+				
+				let sessionDisplay = '';
+				if (today === sessionDay) {
+					sessionDisplay = `Today, ${sessionTimeStr}`;
+				} else {
+					sessionDisplay = `${sessionDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}, ${sessionTimeStr}`;
+				}
+				
+				document.getElementById('sessionStartTime').textContent = sessionDisplay;
+			});
+		</script>
 	</body>
 </html>
